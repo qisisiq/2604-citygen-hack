@@ -1,0 +1,37 @@
+{
+  "cityName": "The Ascending Ward",
+  "macroShape": "hollow cylindrical tower",
+  "heightBands": 10,
+  "radialRings": 4,
+  "angularSectors": 12,
+  "taxonomyWeights": {
+    "TemplePilgrimage": 0.25,
+    "HospitalHealing": 0.30,
+    "ResourceExtraction": 0.20,
+    "MilitaryResearch": 0.15,
+    "OrganicMegastructure": 0.10
+  },
+  "officialPurpose": "A sacred hospital city where pilgrims become residents while seeking healing.",
+  "hiddenPurpose": "A military-medical extraction system that harvests biological, emotional, and cognitive outputs from patients.",
+  "emergentPurpose": "The city is becoming a living organism that expands in response to suffering, prayer, labor, and treatment waste.",
+  "verticalLogic": {
+    "lower": "waste, labor, quarantine, forgotten temple ruins",
+    "middle": "public hospital, markets, resident wards, worship spaces",
+    "upper": "administration, elite treatment, research, military control",
+    "core": "utilities, ancient healing machine, hidden extraction systems",
+    "outerShell": "public balconies, markets, housing, visible city life",
+    "crown": "organic growth and unstable expansion"
+  },
+  "navigationPrinciples": {
+    "mainPublicRoute": "spiraling pilgrimage ramp",
+    "mainHiddenRoute": "old temple stair inside the core",
+    "mainRestrictedRoute": "military medical elevator",
+    "majorLandmarks": [
+      "The Healing Atrium",
+      "The Votive Surgery Theater",
+      "The Root Cistern",
+      "The Military Recovery Garden",
+      "The Growth Crown"
+    ]
+  }
+}
