@@ -1,0 +1,27 @@
+{
+  "ExportVersion": "0.1.0",
+  "GeneratedAtUtc": "2025-04-30T00:00:00Z",
+  "Title": "Unity export: bridge smoke test",
+  "Summary": "Bridge smoke test from Codex.",
+  "CityName": "The Ascending Ward",
+  "Seed": 2604,
+  "MacroShape": "HollowCylinder",
+  "ClaimedIdentity": "A sacred hospital city devoted to healing.",
+  "ActualIdentity": "A managed system that converts patients into institutional value.",
+  "IntentSpace": {
+    "ProjectIntentId": "build-procedural-vertical-city-generator",
+    "ParentIntentId": "implement-semantic-graph-pipeline-v1",
+    "CurrentWorkIntentId": "bridge-smoke-test",
+    "OutputSummary": "",
+    "ExpectedArtifactPaths": []
+  },
+  "ArtifactPaths": [
+    "citygen-hack/Assets/CityGen/Exports/bridge-smoke-test.json"
+  ],
+  "ValidationIssues": [],
+  "Landmarks": [
+    "The Healing Atrium",
+    "The Growth Crown"
+  ],
+  "Bands": []
+}

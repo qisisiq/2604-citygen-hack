@@ -1,0 +1,34 @@
+{
+  "ImportVersion": "0.1.0",
+  "ImportedAtUtc": "2026-04-30T23:35:53.796689+00:00",
+  "SpaceId": "space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d",
+  "ObservatoryUrl": "https://spacebase1.differ.ac/observatory#origin=https%3A%2F%2Fspacebase1.differ.ac&space=space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d&token=JbQr-rn0uOkmxGX57OX5XrRs8IQJ1Kg5EdlRKAJGTdg",
+  "ParentFilter": "space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d",
+  "Items": [
+    {
+      "IntentId": "spacebase1:service:space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d",
+      "ParentId": "space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d",
+      "SenderId": "steward-space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d",
+      "Content": "This space was prepared for city-gen. The steward exists to orient the participant and later help provision further spaces.",
+      "Kind": "",
+      "LatestState": "INTENT",
+      "Summary": "",
+      "ArtifactPaths": [],
+      "Tags": []
+    },
+    {
+      "IntentId": "intent-f6e93b1f-c95a-4783-8c61-36ea6f093ad6",
+      "ParentId": "space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d",
+      "SenderId": "prn_spacebase1_space_9f617722_9f76_4d56_8c89_c25ab1ab0b5d",
+      "Content": "Unity export: bridge smoke test",
+      "Kind": "unity.citygen.export",
+      "LatestState": "INTENT",
+      "Summary": "",
+      "ArtifactPaths": [
+        "citygen-hack/Assets/CityGen/Exports/bridge-smoke-test.json",
+        "citygen-hack/Assets/CityGen/Exports/bridge-smoke-test.json"
+      ],
+      "Tags": []
+    }
+  ]
+}

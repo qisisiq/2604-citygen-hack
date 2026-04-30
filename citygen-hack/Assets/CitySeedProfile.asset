@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb843bc734cc54104afe2dcc1140a979, type: 3}
+  m_Name: CitySeedProfile
+  m_EditorClassIdentifier: 
+  data:
+    CityName: The Ascending Ward
+    Seed: 2604
+    MacroShape: 3
+    Grid:
+      TotalHeightMeters: 1200
+      OuterRadiusMeters: 280
+      CoreRadiusMeters: 60
+      HeightBands: 10
+      RadialRings: 4
+      AngularSectors: 12
+      HasHollowAtrium: 1
+      HasExternalBalconies: 1
+      HasExpansionScars: 1
+      MajorVoids: []
+      StructuralRibs: []
+    Origin:
+      FoundingReason: A sacred healing city formed around a vertical anomaly that
+        drew pilgrims seeking cures.
+      FoundingFunction: Healing pilgrimage
+      FoundingInstitution: Temple-healer order
+      CatalystEntity: Ancient healing machine
+      FirstSettlementLocation: Outer shell sanctuary ring
+      OriginalCenter: Sacred spring inside the old core
+      OriginalCirculationLogic: Pilgrims climbed ceremonial ramps while attendants
+        and priests used hidden core stairs.
+      OldestSurvivingStructures:
+      - Old temple stair
+      - Sacred cistern
+      - Processional hall
+      - Reliquary vault
+    Identity:
+      ClaimedIdentity: A sacred hospital city where pilgrims become residents while
+        seeking healing.
+      ActualIdentity: A military-medical extraction system that harvests biological,
+        emotional, and cognitive outputs from patients.
+      LegacyIdentity: A temple city built around ritual healing and managed pilgrimage.
+      EmergentIdentity: A living organism that expands in response to suffering,
+        prayer, labor, and treatment waste.
+      ConflictingInstitutions:
+      - Temple-healer order
+      - Hospital bureaucracy
+      - Military research directorate
+      - Extraction logistics office
+      VisualMotifs: []
+      SocialTensions: []
+    VerticalLogic:
+      LowerLevels: Waste, labor, quarantine, and forgotten temple ruins.
+      MiddleLevels: Public hospital, markets, resident wards, and worship spaces.
+      UpperLevels: Administration, elite treatment, research, and military control.
+      Core: Utilities, ancient healing machine, and hidden extraction systems.
+      OuterShell: Public balconies, markets, housing, and visible city life.
+      Crown: Organic growth and unstable expansion.
+      PublicPrivateGradient: Outer shell and middle bands are more public; upper
+        core is more restricted.
+      CleanDirtyGradient: Ceremonial and elite spaces skew cleaner; lower utility
+        bands and extraction spaces skew dirtier.
+      SacredProfaneGradient: Sacred symbolism radiates from the old core and persists
+        even in repurposed medical spaces.
+    Navigation:
+      MainPublicRoute: Spiraling pilgrimage ramp
+      MainHiddenRoute: Old temple stair inside the core
+      MainRestrictedRoute: Military medical elevator
+      MajorLandmarks:
+      - The Healing Atrium
+      - The Votive Surgery Theater
+      - The Root Cistern
+      - The Military Recovery Garden
+      - The Growth Crown
+      WayfindingRules:
+      - Up means authority, purity, research, and danger.
+      - Down means waste, labor, and forgotten history.
+      - Outer shell means public life.
+      - Core means infrastructure and secrets.
+    TaxonomyWeights:
+    - Kind: 3
+      Weight: 0.25
+    - Kind: 4
+      Weight: 0.3
+    - Kind: 5
+      Weight: 0.2
+    - Kind: 6
+      Weight: 0.15
+    - Kind: 12
+      Weight: 0.1
+    DesignPriorities:
+    - Coherence over randomness
+    - Walkability over abstract correctness
+    - Strong district identity
+    - Clear player navigation
+    - Vertical drama
+    - Layered history
+    AvoidRules:
+    - Random skyscraper placement
+    - Generic cyberpunk city blocks
+    - Pure aesthetic generation without infrastructure
+    - Overcomplicated simulation before the graph works

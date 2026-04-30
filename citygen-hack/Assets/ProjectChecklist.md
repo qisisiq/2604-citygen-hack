@@ -7,9 +7,9 @@ Here’s the same plan as a checklist, with the Unity `.gitignore` work folded i
   - `generator contract`
   - `implementation backlog`
   - `review criteria`
-- [ ] Use Intentspace as the coordination layer, not the generator runtime or city-data store.
-- [ ] Keep Unity/repo files as the source of truth for code, assets, schemas, and generated artifacts.
-- [ ] Use Intentspace intents as small contracts, not one huge “build the whole city” task.
+- [x] Use Intentspace as the coordination layer, not the generator runtime or city-data store.
+- [x] Keep Unity/repo files as the source of truth for code, assets, schemas, and generated artifacts.
+- [x] Use Intentspace intents as small contracts, not one huge “build the whole city” task.
 
 - [ ] Create one top-level project intent:
   - `Build procedural vertical city generator in Unity`
@@ -31,7 +31,7 @@ Here’s the same plan as a checklist, with the Unity `.gitignore` work folded i
   - `Done condition`
   - `Artifact paths`
 
-- [ ] Start with a small first milestone:
+- [x] Start with a small first milestone:
   - `OriginAgent`
   - `TaxonomyMixingAgent`
   - `MacroShapeAgent`
@@ -62,7 +62,7 @@ Here’s the same plan as a checklist, with the Unity `.gitignore` work folded i
   - `city-context-schema.md`
   - `ascending-ward.seed.json`
 
-- [ ] Keep the first playable prototype limited to:
+- [x] Keep the first playable prototype limited to:
   - semantic city graph
   - deterministic seed behavior
   - validation rules

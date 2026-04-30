@@ -24,6 +24,7 @@ namespace CityGen.Agents
             }
 
             context.VerticalBands = new List<VerticalBandData>();
+            context.Landmarks = new List<LandmarkNode>();
             int bandCount = Mathf.Max(4, context.Grid.HeightBands);
 
             for (int i = 0; i < bandCount; i++)
@@ -52,10 +53,46 @@ namespace CityGen.Agents
                 context.VerticalBands.Add(band);
             }
 
+            PopulateLandmarks(context);
+
             LogDecision(
                 context,
                 $"Generated {context.VerticalBands.Count} vertical bands.",
                 "Bands were assigned official, hidden, and inherited functions using lower, middle, upper, core, and crown logic.");
+        }
+
+        private static void PopulateLandmarks(CityContext context)
+        {
+            if (context.Navigation == null || context.Navigation.MajorLandmarks == null || context.Navigation.MajorLandmarks.Count == 0)
+            {
+                return;
+            }
+
+            int landmarkCount = context.Navigation.MajorLandmarks.Count;
+            float bandHeight = context.Grid.TotalHeightMeters / Mathf.Max(1, context.VerticalBands.Count);
+
+            for (int i = 0; i < landmarkCount; i++)
+            {
+                int bandIndex = landmarkCount == 1
+                    ? 0
+                    : Mathf.RoundToInt(i * (context.VerticalBands.Count - 1f) / (landmarkCount - 1f));
+
+                VerticalBandData band = context.VerticalBands[Mathf.Clamp(bandIndex, 0, context.VerticalBands.Count - 1)];
+
+                LandmarkNode landmark = new LandmarkNode();
+                landmark.Id = $"landmark-{i:00}";
+                landmark.DisplayName = context.Navigation.MajorLandmarks[i];
+                landmark.BandIndex = band.Index;
+                landmark.Description = $"Navigation landmark associated with {band.DisplayName}.";
+                landmark.ApproximateLocalPosition = new Vector3(
+                    context.Grid.OuterRadiusMeters * 0.72f,
+                    bandHeight * (bandIndex + 0.5f),
+                    0f);
+                landmark.Tags.Add("navigation");
+                landmark.Tags.Add("macro");
+                context.Landmarks.Add(landmark);
+                band.LandmarkIds.Add(landmark.Id);
+            }
         }
 
         private static VerticalBandData BuildBand(int index, int bandCount)

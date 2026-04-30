@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CityGen.Data
 {
@@ -35,16 +36,16 @@ namespace CityGen.Data
                 return;
             }
 
-            SeedDefinition = seedData;
-            Seed = seedData.Seed;
-            CityName = seedData.CityName;
-            MacroShape = seedData.MacroShape;
-            Origin = seedData.Origin;
-            Identity = seedData.Identity;
-            Grid = seedData.Grid;
-            VerticalLogic = seedData.VerticalLogic;
-            Navigation = seedData.Navigation;
-            TaxonomyWeights = new List<TaxonomyWeight>(seedData.TaxonomyWeights);
+            SeedDefinition = DeepClone(seedData);
+            Seed = SeedDefinition.Seed;
+            CityName = SeedDefinition.CityName;
+            MacroShape = SeedDefinition.MacroShape;
+            Origin = DeepClone(SeedDefinition.Origin);
+            Identity = DeepClone(SeedDefinition.Identity);
+            Grid = DeepClone(SeedDefinition.Grid);
+            VerticalLogic = DeepClone(SeedDefinition.VerticalLogic);
+            Navigation = DeepClone(SeedDefinition.Navigation);
+            TaxonomyWeights = CloneTaxonomyWeights(SeedDefinition.TaxonomyWeights);
         }
 
         public void RecordDecision(string agentId, string summary, string rationale)
@@ -96,6 +97,43 @@ namespace CityGen.Data
             {
                 GenerationLog[GenerationLog.Count - 1].ArtifactPaths.Add(path);
             }
+        }
+
+        private static T DeepClone<T>(T source)
+        {
+            if (source == null)
+            {
+                return default(T);
+            }
+
+            return JsonUtility.FromJson<T>(JsonUtility.ToJson(source));
+        }
+
+        private static List<TaxonomyWeight> CloneTaxonomyWeights(List<TaxonomyWeight> source)
+        {
+            List<TaxonomyWeight> clone = new List<TaxonomyWeight>();
+
+            if (source == null)
+            {
+                return clone;
+            }
+
+            for (int i = 0; i < source.Count; i++)
+            {
+                TaxonomyWeight weight = source[i];
+                if (weight == null)
+                {
+                    continue;
+                }
+
+                clone.Add(new TaxonomyWeight
+                {
+                    Kind = weight.Kind,
+                    Weight = weight.Weight
+                });
+            }
+
+            return clone;
         }
     }
 }
