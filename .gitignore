@@ -1,0 +1,47 @@
+# macOS
+.DS_Store
+
+# Local intent-space/session state
+.intent-space/
+
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# Unity build outputs
+[Bb]uild/
+[Bb]uilds/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Crash reports
+sysinfo.txt
+
+# Unity auto-generated package artifacts
+Assets/AssetStoreTools*
+
+# Environment files with secrets
+.env.local
+.env*.local
