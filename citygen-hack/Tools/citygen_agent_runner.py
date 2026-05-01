@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -15,6 +16,7 @@ from typing import Any
 
 DEFAULT_IMPORT_FOLDER = "citygen-hack/Assets/CityGen/Imports"
 DEFAULT_RUN_FOLDER = "citygen-hack/Docs/Intentspace/Runs"
+DEFAULT_PACKET_FOLDER = "citygen-hack/Docs/Intentspace/Packets"
 
 
 class CommandError(RuntimeError):
@@ -49,6 +51,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--import-json", default="")
     parser.add_argument("--import-folder", default=DEFAULT_IMPORT_FOLDER)
     parser.add_argument("--run-folder", default=DEFAULT_RUN_FOLDER)
+    parser.add_argument("--packet-folder", default=DEFAULT_PACKET_FOLDER)
     parser.add_argument("--claim-content", default="I will take this contract and produce repo artifacts.")
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args()
@@ -61,40 +64,79 @@ def main() -> int:
     run_folder.mkdir(parents=True, exist_ok=True)
 
     completed_tasks = 0
+    emit_event(
+        "runner.started",
+        f"Runner started for agent `{args.agent_name}` on parent `{args.parent_id}`.",
+        backend=args.backend,
+        roleFilter=args.role_filter,
+        maxTasks=args.max_tasks,
+        once=args.once,
+    )
 
     while True:
+        packet_folder = resolve_path(workspace_root, args.packet_folder)
+        packet_folder.mkdir(parents=True, exist_ok=True)
         imported_path = (
             Path(args.import_json).resolve()
             if args.import_json
             else run_import_snapshot(workspace_root, args.parent_id, args.import_folder, args.agent_name, args.dry_run)
         )
+        emit_event("import.completed", f"Imported work snapshot from `{imported_path}`.")
 
-        routed = route_work(
+        routed = resume_promised_work(
             workspace_root=workspace_root,
             imported_path=imported_path,
+            packet_folder=packet_folder,
             agent_name=args.agent_name,
             role_filter=args.role_filter,
             intent_id=args.intent_id,
-            claim_content=args.claim_content,
-            dry_run=args.dry_run,
         )
 
         if routed is None:
+            routed = route_work(
+                workspace_root=workspace_root,
+                imported_path=imported_path,
+                agent_name=args.agent_name,
+                role_filter=args.role_filter,
+                intent_id=args.intent_id,
+                claim_content=args.claim_content,
+                dry_run=args.dry_run,
+            )
+
+        if routed is None:
             if args.once:
+                emit_event("runner.finished", "No eligible work items found for one-shot run.")
                 return 0
+            emit_event("runner.idle", "No eligible work items found. Waiting for the next poll.")
             time.sleep(max(args.poll_seconds, 1.0))
             continue
 
-        run_dir = create_run_dir(run_folder, routed, args.agent_name)
-        result = run_worker(
-            backend=args.backend,
-            backend_model=args.backend_model,
-            workspace_root=workspace_root,
-            routed=routed,
-            run_dir=run_dir,
-            agent_name=args.agent_name,
-            dry_run=args.dry_run,
+        emit_event(
+            "work.selected",
+            f"Selected `{routed.content}` ({routed.intent_id}).",
+            intentId=routed.intent_id,
+            promiseId=routed.promise_id,
         )
+
+        run_dir = create_run_dir(run_folder, routed, args.agent_name)
+        emit_event("worker.launch", f"Launching `{args.backend}` worker for `{routed.content}`.", runDir=str(run_dir))
+        try:
+            result = run_worker(
+                backend=args.backend,
+                backend_model=args.backend_model,
+                workspace_root=workspace_root,
+                routed=routed,
+                run_dir=run_dir,
+                agent_name=args.agent_name,
+                dry_run=args.dry_run,
+            )
+        except Exception as exc:  # noqa: BLE001
+            result = {
+                "status": "blocked",
+                "summary": f"Worker launch failed: {exc}",
+                "artifact_paths": [routed.packet_relative_path],
+                "notes": f"Backend `{args.backend}` failed before completion.",
+            }
 
         result_path = run_dir / "worker-result.json"
         result_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
@@ -102,6 +144,13 @@ def main() -> int:
         summary_path.write_text(str(result.get("summary", "")).strip() + "\n", encoding="utf-8")
         artifacts_path = run_dir / "artifacts.json"
         artifacts_path.write_text(json.dumps(result.get("artifact_paths", []), indent=2), encoding="utf-8")
+        emit_event(
+            "worker.result",
+            f"Worker returned `{result.get('status', 'unknown')}` for `{routed.content}`.",
+            intentId=routed.intent_id,
+            promiseId=routed.promise_id,
+            runDir=str(run_dir),
+        )
 
         if not args.dry_run:
             if result.get("status") == "complete":
@@ -112,6 +161,7 @@ def main() -> int:
                     artifact_paths=result.get("artifact_paths", []),
                     agent_name=args.agent_name,
                 )
+                emit_event("intent.complete_posted", f"Posted COMPLETE for `{routed.content}`.", intentId=routed.intent_id)
             else:
                 post_blocked_update(
                     workspace_root=workspace_root,
@@ -120,19 +170,27 @@ def main() -> int:
                     artifact_paths=result.get("artifact_paths", []),
                     agent_name=args.agent_name,
                 )
+                emit_event("intent.blocked_posted", f"Posted blocked update for `{routed.content}`.", intentId=routed.intent_id)
 
         completed_tasks += 1
         if args.once:
+            emit_event("runner.finished", "Runner finished one-shot execution.", completedTasks=completed_tasks)
             return 0
         if args.max_tasks > 0 and completed_tasks >= args.max_tasks:
+            emit_event("runner.finished", f"Runner reached max task limit ({args.max_tasks}).", completedTasks=completed_tasks)
             return 0
 
+        emit_event("runner.sleep", f"Runner sleeping for {max(args.poll_seconds, 1.0):0.###} seconds.")
         time.sleep(max(args.poll_seconds, 1.0))
 
 
 def resolve_path(workspace_root: Path, raw_path: str) -> Path:
     path = Path(raw_path)
     return path if path.is_absolute() else (workspace_root / path).resolve()
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def run_import_snapshot(workspace_root: Path, parent_id: str, import_folder: str, agent_name: str, dry_run: bool) -> Path:
@@ -203,6 +261,54 @@ def route_work(
         packet_path=Path(str(payload["packetPath"])).resolve(),
         packet_relative_path=str(payload["packetRelativePath"]),
     )
+
+
+def resume_promised_work(
+    *,
+    workspace_root: Path,
+    imported_path: Path,
+    packet_folder: Path,
+    agent_name: str,
+    role_filter: str,
+    intent_id: str,
+) -> RoutedWork | None:
+    imported = read_json(imported_path)
+    items = imported.get("Items")
+    if not isinstance(items, list):
+        return None
+
+    for item in items:
+        item_intent_id = str(item.get("IntentId", ""))
+        if intent_id and item_intent_id != intent_id:
+            continue
+
+        if str(item.get("LatestState", "")) != "PROMISE":
+            continue
+
+        if role_filter:
+            item_role = str(item.get("RoleHint", ""))
+            if item_role != role_filter:
+                continue
+
+        packet_path = packet_folder / f"{item_intent_id.replace(':', '_')}-{agent_name}.md"
+        if not packet_path.exists():
+            continue
+
+        promise_id = extract_promise_id(packet_path)
+        if not promise_id:
+            continue
+
+        emit_event("work.resumed", f"Resuming promised task `{item.get('Content', '')}`.", intentId=item_intent_id, promiseId=promise_id)
+
+        return RoutedWork(
+            intent_id=item_intent_id,
+            content=str(item.get("Content", "")),
+            promise_id=promise_id,
+            packet_path=packet_path.resolve(),
+            packet_relative_path=str(packet_path.resolve().relative_to(workspace_root)).replace("\\", "/"),
+        )
+
+    return None
 
 
 def create_run_dir(run_folder: Path, routed: RoutedWork, agent_name: str) -> Path:
@@ -291,7 +397,7 @@ def run_codex_worker(workspace_root: Path, backend_model: str, prompt_text: str,
     stderr_path = run_dir / "worker-stderr.log"
 
     command = [
-        "codex",
+        resolve_backend_executable("codex"),
         "exec",
         "--cd",
         str(workspace_root),
@@ -337,7 +443,7 @@ def run_claude_worker(workspace_root: Path, backend_model: str, prompt_text: str
     output_path = run_dir / "worker-last-message.json"
 
     command = [
-        "claude",
+        resolve_backend_executable("claude"),
         "-p",
         "--permission-mode",
         "dontAsk",
@@ -377,6 +483,45 @@ def build_worker_env() -> dict[str, str]:
     env = dict(os.environ)
     env.setdefault("TERM", "dumb")
     return env
+
+
+def extract_promise_id(packet_path: Path) -> str:
+    try:
+        for line in packet_path.read_text(encoding="utf-8").splitlines():
+            if line.startswith("- Promise ID:"):
+                value = line.split("`")
+                if len(value) >= 2:
+                    return value[1].strip()
+    except OSError:
+        return ""
+
+    return ""
+
+
+def resolve_backend_executable(name: str) -> str:
+    found = shutil.which(name)
+    if found:
+        return found
+
+    home = Path.home()
+    candidates: dict[str, list[Path]] = {
+        "codex": [
+            Path("/opt/homebrew/bin/codex"),
+            Path("/usr/local/bin/codex"),
+            home / ".local" / "bin" / "codex",
+        ],
+        "claude": [
+            home / ".local" / "bin" / "claude",
+            Path("/opt/homebrew/bin/claude"),
+            Path("/usr/local/bin/claude"),
+        ],
+    }
+
+    for candidate in candidates.get(name, []):
+        if candidate.exists():
+            return str(candidate)
+
+    raise FileNotFoundError(f"{name} executable not found")
 
 
 def post_complete(
@@ -484,6 +629,15 @@ def try_parse_json(text: str) -> dict[str, Any] | None:
         return json.loads(stripped)
     except json.JSONDecodeError:
         return None
+
+
+def emit_event(event_name: str, message: str, **fields: Any) -> None:
+    payload = {
+        "eventName": event_name,
+        "message": message,
+        **fields,
+    }
+    print(json.dumps(payload), flush=True)
 
 
 if __name__ == "__main__":

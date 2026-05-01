@@ -1,0 +1,153 @@
+{
+  "ImportVersion": "0.1.0",
+  "ImportedAtUtc": "2026-05-01T00:26:50.028059+00:00",
+  "SpaceId": "space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d",
+  "ObservatoryUrl": "https://spacebase1.differ.ac/observatory#origin=https%3A%2F%2Fspacebase1.differ.ac&space=space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d&token=JbQr-rn0uOkmxGX57OX5XrRs8IQJ1Kg5EdlRKAJGTdg",
+  "ParentFilter": "intent-850dcf0e-e621-405c-b550-61b60afedba1",
+  "Items": [
+    {
+      "IntentId": "intent-5d95d598-9275-4d70-8986-79fb91b740b5",
+      "ParentId": "intent-850dcf0e-e621-405c-b550-61b60afedba1",
+      "SenderId": "prn_spacebase1_space_9f617722_9f76_4d56_8c89_c25ab1ab0b5d",
+      "Content": "Implement InfrastructureAgent v1",
+      "Kind": "unity.citygen.module",
+      "LatestState": "PROMISE",
+      "Summary": "I will take this contract and produce repo artifacts.",
+      "Goal": "Generate support flows for water, waste, power, maintenance, and medical logistics.",
+      "RoleHint": "graph-systems agent",
+      "Priority": "high",
+      "Inputs": [
+        "CityContext after VerticalZoningAgent",
+        "Docs/Prompts/Agents/05-infrastructure-agent.md"
+      ],
+      "Outputs": [
+        "InfrastructureAgent.cs",
+        "InfrastructureFlow data",
+        "Generation log entries"
+      ],
+      "NonGoals": [
+        "Room placement",
+        "Mesh generation"
+      ],
+      "DoneCondition": [
+        "Each major band has required support services.",
+        "Public spaces have nearby service infrastructure.",
+        "Restricted spaces have hidden logistics routes."
+      ],
+      "ArtifactPaths": [
+        "Assets/Scripts/CityGen/Agents/InfrastructureAgent.cs",
+        "Assets/Scripts/CityGen/Data/",
+        "Assets/CityGen/Exports/"
+      ],
+      "Tags": []
+    },
+    {
+      "IntentId": "intent-0fc80ee8-569d-4111-a19f-4945e368ebbc",
+      "ParentId": "intent-850dcf0e-e621-405c-b550-61b60afedba1",
+      "SenderId": "prn_spacebase1_space_9f617722_9f76_4d56_8c89_c25ab1ab0b5d",
+      "Content": "Implement GovernanceAgent v1",
+      "Kind": "unity.citygen.module",
+      "LatestState": "INTENT",
+      "Summary": "",
+      "Goal": "Map factions, control zones, social hierarchy, and surveillance gradients into the city graph.",
+      "RoleHint": "narrative-systems agent",
+      "Priority": "medium",
+      "Inputs": [
+        "CityContext after TaxonomyMixingAgent",
+        "Docs/Prompts/Agents/06-governance-and-social-hierarchy-agent.md"
+      ],
+      "Outputs": [
+        "GovernanceAgent.cs",
+        "Faction and control data",
+        "Access restriction annotations"
+      ],
+      "NonGoals": [
+        "Quest scripting",
+        "Dialogue writing"
+      ],
+      "DoneCondition": [
+        "Major districts have controlling powers or tensions.",
+        "Access levels reflect governance decisions.",
+        "The generator can explain who benefits and who is constrained."
+      ],
+      "ArtifactPaths": [
+        "Assets/Scripts/CityGen/Agents/GovernanceAgent.cs",
+        "Assets/Scripts/CityGen/Data/"
+      ],
+      "Tags": []
+    },
+    {
+      "IntentId": "intent-04d757a5-cc64-4d60-b869-f7ada3c0d667",
+      "ParentId": "intent-850dcf0e-e621-405c-b550-61b60afedba1",
+      "SenderId": "prn_spacebase1_space_9f617722_9f76_4d56_8c89_c25ab1ab0b5d",
+      "Content": "Implement DistrictAgent v1",
+      "Kind": "unity.citygen.module",
+      "LatestState": "INTENT",
+      "Summary": "",
+      "Goal": "Convert bands and sectors into connected district nodes with clear identities.",
+      "RoleHint": "graph-systems agent",
+      "Priority": "high",
+      "Inputs": [
+        "CityContext after InfrastructureAgent and GovernanceAgent",
+        "Docs/Prompts/Agents/07-district-agent.md"
+      ],
+      "Outputs": [
+        "DistrictAgent.cs",
+        "DistrictNode population",
+        "Landmark assignments"
+      ],
+      "NonGoals": [
+        "Room clusters",
+        "Detailed interior loops"
+      ],
+      "DoneCondition": [
+        "Each generated district has function, access, motifs, and dependencies.",
+        "Districts reflect the city's mixed taxonomy.",
+        "Districts are represented as graph nodes, not decorative labels."
+      ],
+      "ArtifactPaths": [
+        "Assets/Scripts/CityGen/Agents/DistrictAgent.cs",
+        "Assets/Scripts/CityGen/Data/DistrictNode.cs",
+        "Assets/CityGen/Exports/"
+      ],
+      "Tags": []
+    },
+    {
+      "IntentId": "intent-9fade0d0-325e-4eb9-ad1a-3524cd8ebe68",
+      "ParentId": "intent-850dcf0e-e621-405c-b550-61b60afedba1",
+      "SenderId": "prn_spacebase1_space_9f617722_9f76_4d56_8c89_c25ab1ab0b5d",
+      "Content": "Implement CirculationAgent v1",
+      "Kind": "unity.citygen.module",
+      "LatestState": "INTENT",
+      "Summary": "",
+      "Goal": "Generate the public, hidden, and restricted route networks that make the tower legible and traversable.",
+      "RoleHint": "navigation agent",
+      "Priority": "high",
+      "Inputs": [
+        "CityContext after DistrictAgent",
+        "Docs/Prompts/Agents/08-circulation-agent.md"
+      ],
+      "Outputs": [
+        "CirculationAgent.cs",
+        "RouteEdge data",
+        "Landmark visibility hints"
+      ],
+      "NonGoals": [
+        "Final pathfinding mesh baking",
+        "Runtime NPC routing"
+      ],
+      "DoneCondition": [
+        "At least one major public vertical route exists.",
+        "At least one hidden vertical route exists.",
+        "Major bands connect upward and downward.",
+        "Landmarks support player orientation."
+      ],
+      "ArtifactPaths": [
+        "Assets/Scripts/CityGen/Agents/CirculationAgent.cs",
+        "Assets/Scripts/CityGen/Data/RouteEdge.cs",
+        "Assets/CityGen/Exports/"
+      ],
+      "Tags": []
+    }
+  ]
+}

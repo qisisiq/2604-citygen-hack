@@ -1,0 +1,8 @@
+{
+  "status": "blocked",
+  "summary": "Dry run only. Selected contract `Implement InfrastructureAgent v1` for `infra-agent-01`.",
+  "artifact_paths": [
+    "citygen-hack/Docs/Intentspace/Packets/intent-5d95d598-9275-4d70-8986-79fb91b740b5-infra-agent-01.md"
+  ],
+  "notes": "Worker backend `codex` was not launched."
+}

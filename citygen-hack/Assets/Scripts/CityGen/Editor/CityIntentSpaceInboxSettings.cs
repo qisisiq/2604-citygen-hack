@@ -48,6 +48,9 @@ namespace CityGen.Editor
         private float runnerPollIntervalSeconds = 90f;
 
         [SerializeField]
+        private int runnerMaxTasks;
+
+        [SerializeField]
         private int runnerProcessId;
 
         [SerializeField]
@@ -175,6 +178,16 @@ namespace CityGen.Editor
             set
             {
                 runnerPollIntervalSeconds = Mathf.Max(5f, value);
+                Save(true);
+            }
+        }
+
+        public int RunnerMaxTasks
+        {
+            get { return runnerMaxTasks; }
+            set
+            {
+                runnerMaxTasks = Mathf.Max(0, value);
                 Save(true);
             }
         }

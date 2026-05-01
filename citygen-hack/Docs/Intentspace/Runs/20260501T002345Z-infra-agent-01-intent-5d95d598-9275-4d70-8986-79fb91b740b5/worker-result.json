@@ -1,0 +1,8 @@
+{
+  "status": "blocked",
+  "summary": "Worker launch failed: codex worker failed",
+  "artifact_paths": [
+    "citygen-hack/Docs/Intentspace/Packets/intent-5d95d598-9275-4d70-8986-79fb91b740b5-infra-agent-01.md"
+  ],
+  "notes": "Backend `codex` failed before completion."
+}

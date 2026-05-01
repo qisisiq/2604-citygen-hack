@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using CityGen.Core;
@@ -15,6 +16,8 @@ namespace CityGen.Editor
         private const string RunnerScriptProjectRelativePath = "Tools/citygen_agent_runner.py";
         private const string PythonExecutable = "python3";
         private static double nextStatusPollTime;
+        private static readonly Queue<RunnerLogMessage> PendingLogMessages = new Queue<RunnerLogMessage>();
+        private static readonly object PendingLogLock = new object();
 
         static CityIntentSpaceAgentRunnerController()
         {
@@ -108,13 +111,18 @@ namespace CityGen.Editor
                 startInfo.Arguments += " " + Quote("--once");
             }
 
+            if (settings.RunnerMaxTasks > 0)
+            {
+                startInfo.Arguments += " " + Quote("--max-tasks") + " " + Quote(settings.RunnerMaxTasks.ToString());
+            }
+
             try
             {
                 Process process = new Process();
                 process.StartInfo = startInfo;
                 process.EnableRaisingEvents = true;
-                process.OutputDataReceived += (_, eventArgs) => AppendLogLine(stdoutLogPath, eventArgs.Data);
-                process.ErrorDataReceived += (_, eventArgs) => AppendLogLine(stderrLogPath, eventArgs.Data);
+                process.OutputDataReceived += (_, eventArgs) => HandleProcessOutput(stdoutLogPath, eventArgs.Data, false);
+                process.ErrorDataReceived += (_, eventArgs) => HandleProcessOutput(stderrLogPath, eventArgs.Data, true);
                 process.Exited += (_, _) => OnRunnerExited(process.ExitCode);
 
                 if (!process.Start())
@@ -172,10 +180,12 @@ namespace CityGen.Editor
         {
             if (EditorApplication.timeSinceStartup < nextStatusPollTime)
             {
+                FlushPendingLogMessages();
                 return;
             }
 
             nextStatusPollTime = EditorApplication.timeSinceStartup + 2.0d;
+            FlushPendingLogMessages();
             CityIntentSpaceInboxSettings settings = CityIntentSpaceInboxSettings.instance;
             if (settings.RunnerProcessId <= 0)
             {
@@ -282,6 +292,91 @@ namespace CityGen.Editor
             catch
             {
             }
+        }
+
+        private static void HandleProcessOutput(string path, string line, bool isError)
+        {
+            AppendLogLine(path, line);
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                return;
+            }
+
+            lock (PendingLogLock)
+            {
+                PendingLogMessages.Enqueue(new RunnerLogMessage(line, isError));
+            }
+        }
+
+        private static void FlushPendingLogMessages()
+        {
+            while (true)
+            {
+                RunnerLogMessage? message = null;
+                lock (PendingLogLock)
+                {
+                    if (PendingLogMessages.Count > 0)
+                    {
+                        message = PendingLogMessages.Dequeue();
+                    }
+                }
+
+                if (!message.HasValue)
+                {
+                    break;
+                }
+
+                LogRunnerMessage(message.Value);
+            }
+        }
+
+        private static void LogRunnerMessage(RunnerLogMessage message)
+        {
+            CityIntentSpaceInboxSettings settings = CityIntentSpaceInboxSettings.instance;
+            string rawText = message.Text.Trim();
+            string displayText = rawText;
+
+            try
+            {
+                RunnerEventPayload payload = JsonUtility.FromJson<RunnerEventPayload>(rawText);
+                if (!string.IsNullOrWhiteSpace(payload.message))
+                {
+                    displayText = payload.message;
+                    settings.RunnerLastStatusMessage = payload.message;
+                }
+            }
+            catch
+            {
+            }
+
+            if (message.IsError)
+            {
+                Debug.LogError($"[CityGen Runner] {displayText}");
+            }
+            else
+            {
+                Debug.Log($"[CityGen Runner] {displayText}");
+            }
+        }
+
+        private readonly struct RunnerLogMessage
+        {
+            public RunnerLogMessage(string text, bool isError)
+            {
+                Text = text;
+                IsError = isError;
+            }
+
+            public string Text { get; }
+
+            public bool IsError { get; }
+        }
+
+        [Serializable]
+        private sealed class RunnerEventPayload
+        {
+            public string eventName = string.Empty;
+            public string message = string.Empty;
         }
     }
 }

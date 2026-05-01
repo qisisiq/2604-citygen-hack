@@ -168,6 +168,7 @@ namespace CityGen.Editor
             string backend = EditorGUILayout.Popup("Backend", settings.RunnerBackend == "claude" ? 1 : 0, new[] { "codex", "claude" }) == 1 ? "claude" : "codex";
             string backendModel = EditorGUILayout.TextField("Backend Model", settings.RunnerBackendModel);
             float pollSeconds = EditorGUILayout.FloatField("Runner Poll (sec)", settings.RunnerPollIntervalSeconds);
+            int maxTasks = EditorGUILayout.IntField("Max Tasks", settings.RunnerMaxTasks);
 
             if (EditorGUI.EndChangeCheck())
             {
@@ -177,6 +178,7 @@ namespace CityGen.Editor
                 settings.RunnerBackend = backend;
                 settings.RunnerBackendModel = backendModel;
                 settings.RunnerPollIntervalSeconds = pollSeconds;
+                settings.RunnerMaxTasks = maxTasks;
             }
 
             using (new EditorGUILayout.HorizontalScope())
@@ -218,6 +220,7 @@ namespace CityGen.Editor
 
             EditorGUILayout.LabelField("Runner Last Started", string.IsNullOrWhiteSpace(settings.RunnerLastStartedAtUtc) ? "Never" : settings.RunnerLastStartedAtUtc);
             EditorGUILayout.LabelField("Runner Status", string.IsNullOrWhiteSpace(settings.RunnerLastStatusMessage) ? "None" : settings.RunnerLastStatusMessage);
+            EditorGUILayout.LabelField("Runner Limit", settings.RunnerMaxTasks <= 0 ? "Unlimited" : settings.RunnerMaxTasks.ToString());
 
             if (!string.IsNullOrWhiteSpace(settings.RunnerLastLogPath))
             {
