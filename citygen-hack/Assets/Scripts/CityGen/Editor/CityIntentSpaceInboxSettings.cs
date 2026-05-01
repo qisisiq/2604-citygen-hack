@@ -29,6 +29,36 @@ namespace CityGen.Editor
         [SerializeField]
         private string lastImportedSummary = string.Empty;
 
+        [SerializeField]
+        private string runnerParentIntentId = string.Empty;
+
+        [SerializeField]
+        private string runnerRoleFilter = "graph-systems agent";
+
+        [SerializeField]
+        private string runnerAgentName = "infra-agent-01";
+
+        [SerializeField]
+        private string runnerBackend = "codex";
+
+        [SerializeField]
+        private string runnerBackendModel = string.Empty;
+
+        [SerializeField]
+        private float runnerPollIntervalSeconds = 90f;
+
+        [SerializeField]
+        private int runnerProcessId;
+
+        [SerializeField]
+        private string runnerLastStartedAtUtc = string.Empty;
+
+        [SerializeField]
+        private string runnerLastStatusMessage = string.Empty;
+
+        [SerializeField]
+        private string runnerLastLogPath = string.Empty;
+
         public bool AutoImportEnabled
         {
             get { return autoImportEnabled; }
@@ -85,6 +115,106 @@ namespace CityGen.Editor
             set
             {
                 lastImportedSummary = value ?? string.Empty;
+                Save(true);
+            }
+        }
+
+        public string RunnerParentIntentId
+        {
+            get { return runnerParentIntentId; }
+            set
+            {
+                runnerParentIntentId = value ?? string.Empty;
+                Save(true);
+            }
+        }
+
+        public string RunnerRoleFilter
+        {
+            get { return runnerRoleFilter; }
+            set
+            {
+                runnerRoleFilter = value ?? string.Empty;
+                Save(true);
+            }
+        }
+
+        public string RunnerAgentName
+        {
+            get { return runnerAgentName; }
+            set
+            {
+                runnerAgentName = value ?? string.Empty;
+                Save(true);
+            }
+        }
+
+        public string RunnerBackend
+        {
+            get { return runnerBackend; }
+            set
+            {
+                runnerBackend = value ?? string.Empty;
+                Save(true);
+            }
+        }
+
+        public string RunnerBackendModel
+        {
+            get { return runnerBackendModel; }
+            set
+            {
+                runnerBackendModel = value ?? string.Empty;
+                Save(true);
+            }
+        }
+
+        public float RunnerPollIntervalSeconds
+        {
+            get { return runnerPollIntervalSeconds; }
+            set
+            {
+                runnerPollIntervalSeconds = Mathf.Max(5f, value);
+                Save(true);
+            }
+        }
+
+        public int RunnerProcessId
+        {
+            get { return runnerProcessId; }
+            set
+            {
+                runnerProcessId = Mathf.Max(0, value);
+                Save(true);
+            }
+        }
+
+        public string RunnerLastStartedAtUtc
+        {
+            get { return runnerLastStartedAtUtc; }
+            set
+            {
+                runnerLastStartedAtUtc = value ?? string.Empty;
+                Save(true);
+            }
+        }
+
+        public string RunnerLastStatusMessage
+        {
+            get { return runnerLastStatusMessage; }
+            set
+            {
+                runnerLastStatusMessage = value ?? string.Empty;
+                Save(true);
+            }
+        }
+
+        public string RunnerLastLogPath
+        {
+            get { return runnerLastLogPath; }
+            set
+            {
+                runnerLastLogPath = value ?? string.Empty;
                 Save(true);
             }
         }

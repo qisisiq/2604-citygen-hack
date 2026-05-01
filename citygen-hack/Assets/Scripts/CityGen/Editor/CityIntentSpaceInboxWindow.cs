@@ -38,6 +38,8 @@ namespace CityGen.Editor
             EditorGUILayout.Space(8f);
             DrawImportSection(settings, generator);
             EditorGUILayout.Space(8f);
+            DrawRunnerSection(settings, generator);
+            EditorGUILayout.Space(8f);
             DrawStatusSection(settings, generator);
             EditorGUILayout.Space(8f);
             DrawBacklogSection(generator);
@@ -154,6 +156,86 @@ namespace CityGen.Editor
             }
         }
 
+        private void DrawRunnerSection(CityIntentSpaceInboxSettings settings, CityGenerator generator)
+        {
+            EditorGUILayout.LabelField("AI Runner", EditorStyles.boldLabel);
+            DrawRunnerStatePill(CityIntentSpaceAgentRunnerController.IsRunnerRunning ? "RUNNING" : "STOPPED", CityIntentSpaceAgentRunnerController.IsRunnerRunning);
+
+            EditorGUI.BeginChangeCheck();
+            string parentIntentId = EditorGUILayout.TextField("Runner Parent", settings.RunnerParentIntentId);
+            string roleFilter = EditorGUILayout.TextField("Role Filter", settings.RunnerRoleFilter);
+            string agentName = EditorGUILayout.TextField("Agent Name", settings.RunnerAgentName);
+            string backend = EditorGUILayout.Popup("Backend", settings.RunnerBackend == "claude" ? 1 : 0, new[] { "codex", "claude" }) == 1 ? "claude" : "codex";
+            string backendModel = EditorGUILayout.TextField("Backend Model", settings.RunnerBackendModel);
+            float pollSeconds = EditorGUILayout.FloatField("Runner Poll (sec)", settings.RunnerPollIntervalSeconds);
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                settings.RunnerParentIntentId = parentIntentId;
+                settings.RunnerRoleFilter = roleFilter;
+                settings.RunnerAgentName = agentName;
+                settings.RunnerBackend = backend;
+                settings.RunnerBackendModel = backendModel;
+                settings.RunnerPollIntervalSeconds = pollSeconds;
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("Use Import Parent") && generator != null)
+                {
+                    settings.RunnerParentIntentId = generator.IntentSpaceImportParentId;
+                }
+
+                if (GUILayout.Button("Use Imported Branch") && generator != null && generator.LastImportedIntentSpaceData != null && generator.LastImportedIntentSpaceData.Items.Count > 0)
+                {
+                    settings.RunnerParentIntentId = generator.LastImportedIntentSpaceData.ParentFilter;
+                }
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                using (new EditorGUI.DisabledScope(CityIntentSpaceAgentRunnerController.IsRunnerRunning))
+                {
+                    if (GUILayout.Button("Start Runner"))
+                    {
+                        CityIntentSpaceAgentRunnerController.StartRunner(generator, false);
+                    }
+
+                    if (GUILayout.Button("Run Once"))
+                    {
+                        CityIntentSpaceAgentRunnerController.StartRunner(generator, true);
+                    }
+                }
+
+                using (new EditorGUI.DisabledScope(!CityIntentSpaceAgentRunnerController.IsRunnerRunning))
+                {
+                    if (GUILayout.Button("Stop Runner"))
+                    {
+                        CityIntentSpaceAgentRunnerController.StopRunner();
+                    }
+                }
+            }
+
+            EditorGUILayout.LabelField("Runner Last Started", string.IsNullOrWhiteSpace(settings.RunnerLastStartedAtUtc) ? "Never" : settings.RunnerLastStartedAtUtc);
+            EditorGUILayout.LabelField("Runner Status", string.IsNullOrWhiteSpace(settings.RunnerLastStatusMessage) ? "None" : settings.RunnerLastStatusMessage);
+
+            if (!string.IsNullOrWhiteSpace(settings.RunnerLastLogPath))
+            {
+                string normalizedPath = NormalizeProjectRelativePath(settings.RunnerLastLogPath);
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField("Runner Log", normalizedPath);
+                    if (GUILayout.Button("Reveal", GUILayout.Width(64f)))
+                    {
+                        if (File.Exists(settings.RunnerLastLogPath))
+                        {
+                            EditorUtility.RevealInFinder(settings.RunnerLastLogPath);
+                        }
+                    }
+                }
+            }
+        }
+
         private void DrawBacklogSection(CityGenerator generator)
         {
             EditorGUILayout.LabelField("Backlog", EditorStyles.boldLabel);
@@ -252,6 +334,35 @@ namespace CityGen.Editor
             }
 
             return normalized;
+        }
+
+        private static string NormalizeProjectRelativePath(string rawPath)
+        {
+            if (string.IsNullOrWhiteSpace(rawPath))
+            {
+                return string.Empty;
+            }
+
+            string normalized = rawPath.Replace('\\', '/');
+            int docsIndex = normalized.IndexOf("Docs/", System.StringComparison.Ordinal);
+            if (docsIndex >= 0)
+            {
+                normalized = normalized.Substring(docsIndex);
+            }
+
+            return normalized;
+        }
+
+        private static void DrawRunnerStatePill(string label, bool isRunning)
+        {
+            Rect rect = GUILayoutUtility.GetRect(1f, 20f, GUILayout.ExpandWidth(true));
+            Color background = isRunning ? new Color(0.18f, 0.55f, 0.22f, 1f) : new Color(0.75f, 0.18f, 0.18f, 1f);
+            EditorGUI.DrawRect(rect, background);
+
+            GUIStyle style = new GUIStyle(EditorStyles.boldLabel);
+            style.alignment = TextAnchor.MiddleCenter;
+            style.normal.textColor = Color.white;
+            EditorGUI.LabelField(rect, label, style);
         }
     }
 }
