@@ -1,6 +1,6 @@
 {
   "ImportVersion": "0.1.0",
-  "ImportedAtUtc": "2026-04-30T23:35:53.796689+00:00",
+  "ImportedAtUtc": "2026-05-01T00:10:40.762598+00:00",
   "SpaceId": "space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d",
   "ObservatoryUrl": "https://spacebase1.differ.ac/observatory#origin=https%3A%2F%2Fspacebase1.differ.ac&space=space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d&token=JbQr-rn0uOkmxGX57OX5XrRs8IQJ1Kg5EdlRKAJGTdg",
   "ParentFilter": "space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d",
@@ -13,6 +13,13 @@
       "Kind": "",
       "LatestState": "INTENT",
       "Summary": "",
+      "Goal": "",
+      "RoleHint": "",
+      "Priority": "",
+      "Inputs": [],
+      "Outputs": [],
+      "NonGoals": [],
+      "DoneCondition": [],
       "ArtifactPaths": [],
       "Tags": []
     },
@@ -24,9 +31,59 @@
       "Kind": "unity.citygen.export",
       "LatestState": "INTENT",
       "Summary": "",
+      "Goal": "",
+      "RoleHint": "",
+      "Priority": "",
+      "Inputs": [],
+      "Outputs": [],
+      "NonGoals": [],
+      "DoneCondition": [],
       "ArtifactPaths": [
         "citygen-hack/Assets/CityGen/Exports/bridge-smoke-test.json",
         "citygen-hack/Assets/CityGen/Exports/bridge-smoke-test.json"
+      ],
+      "Tags": []
+    },
+    {
+      "IntentId": "intent-b8def2d6-e500-4acd-a528-767e5520a004",
+      "ParentId": "space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d",
+      "SenderId": "prn_spacebase1_space_9f617722_9f76_4d56_8c89_c25ab1ab0b5d",
+      "Content": "Build procedural vertical city generator in Unity",
+      "Kind": "unity.citygen.project",
+      "LatestState": "INTENT",
+      "Summary": "",
+      "Goal": "Coordinate the remaining work needed to turn the current prototype into a coherent multi-agent procedural city generator in Unity.",
+      "RoleHint": "",
+      "Priority": "",
+      "Inputs": [
+        "Docs/Canon/ascending-ward.md",
+        "Docs/Contracts/generator-architecture.md",
+        "Docs/Contracts/city-context-schema.md",
+        "Docs/Contracts/agent-pipeline.md",
+        "Assets/Scripts/CityGen/"
+      ],
+      "Outputs": [
+        "A deterministic semantic graph pipeline",
+        "A navigable blockout geometry pass",
+        "A validation pass with concrete repair outputs",
+        "A working Intentspace coordination loop for the Unity project"
+      ],
+      "NonGoals": [
+        "Final art production",
+        "One-click finished city generation",
+        "District-specific handcrafted polish",
+        "Open-ended internet asset crawling"
+      ],
+      "DoneCondition": [
+        "The generator produces a coherent vertical city graph from a seed.",
+        "The blockout is navigable and legible in Scene view.",
+        "Major systems can be coordinated through Intentspace contracts and artifact references."
+      ],
+      "ArtifactPaths": [
+        "Assets/Scripts/CityGen/",
+        "Assets/CityGen/Exports/",
+        "Assets/CityGen/Imports/",
+        "Docs/"
       ],
       "Tags": []
     }

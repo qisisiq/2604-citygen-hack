@@ -4,6 +4,7 @@ This folder separates the project into three layers:
 
 - `Canon/`: fiction and design truth for the current city.
 - `Contracts/`: the generator schema and agent pipeline contracts.
+- `Intentspace/`: the coordination model, work template, and backlog guidance.
 - `Prompts/`: prompt fragments split into reusable files.
 
 Intentspace should sit above this as the coordination layer:

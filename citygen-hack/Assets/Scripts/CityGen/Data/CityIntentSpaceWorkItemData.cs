@@ -13,6 +13,13 @@ namespace CityGen.Data
         public string Kind = string.Empty;
         public string LatestState = string.Empty;
         public string Summary = string.Empty;
+        public string Goal = string.Empty;
+        public string RoleHint = string.Empty;
+        public string Priority = string.Empty;
+        public List<string> Inputs = new List<string>();
+        public List<string> Outputs = new List<string>();
+        public List<string> NonGoals = new List<string>();
+        public List<string> DoneCondition = new List<string>();
         public List<string> ArtifactPaths = new List<string>();
         public List<string> Tags = new List<string>();
     }

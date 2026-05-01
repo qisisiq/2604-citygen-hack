@@ -184,9 +184,21 @@ namespace CityGen.Editor
                 EditorGUILayout.LabelField("Kind", string.IsNullOrWhiteSpace(item.Kind) ? "(none)" : item.Kind);
                 EditorGUILayout.LabelField("Intent ID", item.IntentId);
                 EditorGUILayout.LabelField("Parent", item.ParentId);
+                if (!string.IsNullOrWhiteSpace(item.RoleHint))
+                {
+                    EditorGUILayout.LabelField("Role Hint", item.RoleHint);
+                }
+                if (!string.IsNullOrWhiteSpace(item.Priority))
+                {
+                    EditorGUILayout.LabelField("Priority", item.Priority);
+                }
                 if (!string.IsNullOrWhiteSpace(item.Summary))
                 {
                     EditorGUILayout.LabelField("Summary", item.Summary);
+                }
+                if (!string.IsNullOrWhiteSpace(item.Goal))
+                {
+                    EditorGUILayout.LabelField("Goal", item.Goal, EditorStyles.wordWrappedLabel);
                 }
 
                 using (new EditorGUILayout.HorizontalScope())

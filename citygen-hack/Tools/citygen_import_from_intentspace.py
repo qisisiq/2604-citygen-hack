@@ -104,6 +104,26 @@ def normalize_item(session, message: dict, kind_filter: str | None) -> dict | No
     if not isinstance(tags, list):
         tags = []
 
+    goal = payload.get("goal") if isinstance(payload.get("goal"), str) else ""
+    role_hint = payload.get("roleHint") if isinstance(payload.get("roleHint"), str) else ""
+    priority = payload.get("priority") if isinstance(payload.get("priority"), str) else ""
+
+    inputs = payload.get("inputs")
+    if not isinstance(inputs, list):
+        inputs = []
+
+    outputs = payload.get("outputs")
+    if not isinstance(outputs, list):
+        outputs = []
+
+    non_goals = payload.get("nonGoals")
+    if not isinstance(non_goals, list):
+        non_goals = []
+
+    done_condition = payload.get("doneCondition")
+    if not isinstance(done_condition, list):
+        done_condition = []
+
     content = payload.get("content")
     if not isinstance(content, str):
         content = ""
@@ -116,6 +136,13 @@ def normalize_item(session, message: dict, kind_filter: str | None) -> dict | No
         "Kind": kind,
         "LatestState": latest_state,
         "Summary": summary,
+        "Goal": goal,
+        "RoleHint": role_hint,
+        "Priority": priority,
+        "Inputs": inputs,
+        "Outputs": outputs,
+        "NonGoals": non_goals,
+        "DoneCondition": done_condition,
         "ArtifactPaths": artifact_paths,
         "Tags": tags,
     }

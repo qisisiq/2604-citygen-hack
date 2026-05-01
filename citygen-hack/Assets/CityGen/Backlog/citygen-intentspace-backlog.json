@@ -1,0 +1,390 @@
+{
+  "title": "Build procedural vertical city generator in Unity",
+  "kind": "unity.citygen.project",
+  "summary": "Top-level coordination intent for building the semantic graph, blockout, and Intentspace-aware tooling for the vertical city generator.",
+  "goal": "Coordinate the remaining work needed to turn the current prototype into a coherent multi-agent procedural city generator in Unity.",
+  "inputs": [
+    "Docs/Canon/ascending-ward.md",
+    "Docs/Contracts/generator-architecture.md",
+    "Docs/Contracts/city-context-schema.md",
+    "Docs/Contracts/agent-pipeline.md",
+    "Assets/Scripts/CityGen/"
+  ],
+  "outputs": [
+    "A deterministic semantic graph pipeline",
+    "A navigable blockout geometry pass",
+    "A validation pass with concrete repair outputs",
+    "A working Intentspace coordination loop for the Unity project"
+  ],
+  "nonGoals": [
+    "Final art production",
+    "One-click finished city generation",
+    "District-specific handcrafted polish",
+    "Open-ended internet asset crawling"
+  ],
+  "doneCondition": [
+    "The generator produces a coherent vertical city graph from a seed.",
+    "The blockout is navigable and legible in Scene view.",
+    "Major systems can be coordinated through Intentspace contracts and artifact references."
+  ],
+  "artifactPaths": [
+    "Assets/Scripts/CityGen/",
+    "Assets/CityGen/Exports/",
+    "Assets/CityGen/Imports/",
+    "Docs/"
+  ],
+  "children": [
+    {
+      "title": "Stabilize canon and seed contract",
+      "kind": "unity.citygen.contract",
+      "roleHint": "design-systems agent",
+      "priority": "high",
+      "summary": "Lock the core fiction, seed values, and generator assumptions for The Ascending Ward.",
+      "goal": "Make the canon and seed stable enough that generator modules have a shared target.",
+      "inputs": [
+        "Docs/Canon/ascending-ward.md",
+        "Docs/Seeds/ascending-ward.seed.md",
+        "Assets/CityGen/Seeds/ascending-ward.seed.json"
+      ],
+      "outputs": [
+        "Aligned canon doc",
+        "Aligned seed JSON",
+        "Resolved landmark and vertical-band vocabulary"
+      ],
+      "nonGoals": [
+        "Implementing new runtime code",
+        "Detailed room-level design"
+      ],
+      "doneCondition": [
+        "Canon and seed use consistent band names, landmarks, and purpose layers.",
+        "The seed can drive the current foundation agents without placeholder contradictions."
+      ],
+      "artifactPaths": [
+        "Docs/Canon/ascending-ward.md",
+        "Docs/Seeds/ascending-ward.seed.md",
+        "Assets/CityGen/Seeds/ascending-ward.seed.json"
+      ]
+    },
+    {
+      "title": "Implement semantic graph middle pass",
+      "kind": "unity.citygen.contract",
+      "roleHint": "graph-systems agent",
+      "priority": "high",
+      "summary": "Add the missing graph agents that turn bands into districts, flows, and routes.",
+      "goal": "Expand the current foundation pass into a real semantic city graph with infrastructure, districts, and circulation.",
+      "inputs": [
+        "Assets/Scripts/CityGen/Core/CityGenerator.cs",
+        "Assets/Scripts/CityGen/Agents/",
+        "Docs/Contracts/city-context-schema.md",
+        "Docs/Prompts/Agents/05-infrastructure-agent.md",
+        "Docs/Prompts/Agents/07-district-agent.md",
+        "Docs/Prompts/Agents/08-circulation-agent.md"
+      ],
+      "outputs": [
+        "InfrastructureAgent v1",
+        "GovernanceAgent v1",
+        "DistrictAgent v1",
+        "CirculationAgent v1",
+        "Updated CityContext data fields"
+      ],
+      "nonGoals": [
+        "Detailed room generation",
+        "Final geometry art pass"
+      ],
+      "doneCondition": [
+        "The generator produces infrastructure dependencies for major bands.",
+        "The generator produces district nodes with access levels and identities.",
+        "The generator produces public, hidden, and restricted routes."
+      ],
+      "artifactPaths": [
+        "Assets/Scripts/CityGen/Agents/",
+        "Assets/Scripts/CityGen/Data/",
+        "Assets/CityGen/Exports/"
+      ],
+      "children": [
+        {
+          "title": "Implement InfrastructureAgent v1",
+          "kind": "unity.citygen.module",
+          "roleHint": "graph-systems agent",
+          "priority": "high",
+          "goal": "Generate support flows for water, waste, power, maintenance, and medical logistics.",
+          "inputs": [
+            "CityContext after VerticalZoningAgent",
+            "Docs/Prompts/Agents/05-infrastructure-agent.md"
+          ],
+          "outputs": [
+            "InfrastructureAgent.cs",
+            "InfrastructureFlow data",
+            "Generation log entries"
+          ],
+          "nonGoals": [
+            "Room placement",
+            "Mesh generation"
+          ],
+          "doneCondition": [
+            "Each major band has required support services.",
+            "Public spaces have nearby service infrastructure.",
+            "Restricted spaces have hidden logistics routes."
+          ],
+          "artifactPaths": [
+            "Assets/Scripts/CityGen/Agents/InfrastructureAgent.cs",
+            "Assets/Scripts/CityGen/Data/",
+            "Assets/CityGen/Exports/"
+          ]
+        },
+        {
+          "title": "Implement GovernanceAgent v1",
+          "kind": "unity.citygen.module",
+          "roleHint": "narrative-systems agent",
+          "priority": "medium",
+          "goal": "Map factions, control zones, social hierarchy, and surveillance gradients into the city graph.",
+          "inputs": [
+            "CityContext after TaxonomyMixingAgent",
+            "Docs/Prompts/Agents/06-governance-and-social-hierarchy-agent.md"
+          ],
+          "outputs": [
+            "GovernanceAgent.cs",
+            "Faction and control data",
+            "Access restriction annotations"
+          ],
+          "nonGoals": [
+            "Quest scripting",
+            "Dialogue writing"
+          ],
+          "doneCondition": [
+            "Major districts have controlling powers or tensions.",
+            "Access levels reflect governance decisions.",
+            "The generator can explain who benefits and who is constrained."
+          ],
+          "artifactPaths": [
+            "Assets/Scripts/CityGen/Agents/GovernanceAgent.cs",
+            "Assets/Scripts/CityGen/Data/"
+          ]
+        },
+        {
+          "title": "Implement DistrictAgent v1",
+          "kind": "unity.citygen.module",
+          "roleHint": "graph-systems agent",
+          "priority": "high",
+          "goal": "Convert bands and sectors into connected district nodes with clear identities.",
+          "inputs": [
+            "CityContext after InfrastructureAgent and GovernanceAgent",
+            "Docs/Prompts/Agents/07-district-agent.md"
+          ],
+          "outputs": [
+            "DistrictAgent.cs",
+            "DistrictNode population",
+            "Landmark assignments"
+          ],
+          "nonGoals": [
+            "Room clusters",
+            "Detailed interior loops"
+          ],
+          "doneCondition": [
+            "Each generated district has function, access, motifs, and dependencies.",
+            "Districts reflect the city's mixed taxonomy.",
+            "Districts are represented as graph nodes, not decorative labels."
+          ],
+          "artifactPaths": [
+            "Assets/Scripts/CityGen/Agents/DistrictAgent.cs",
+            "Assets/Scripts/CityGen/Data/DistrictNode.cs",
+            "Assets/CityGen/Exports/"
+          ]
+        },
+        {
+          "title": "Implement CirculationAgent v1",
+          "kind": "unity.citygen.module",
+          "roleHint": "navigation agent",
+          "priority": "high",
+          "goal": "Generate the public, hidden, and restricted route networks that make the tower legible and traversable.",
+          "inputs": [
+            "CityContext after DistrictAgent",
+            "Docs/Prompts/Agents/08-circulation-agent.md"
+          ],
+          "outputs": [
+            "CirculationAgent.cs",
+            "RouteEdge data",
+            "Landmark visibility hints"
+          ],
+          "nonGoals": [
+            "Final pathfinding mesh baking",
+            "Runtime NPC routing"
+          ],
+          "doneCondition": [
+            "At least one major public vertical route exists.",
+            "At least one hidden vertical route exists.",
+            "Major bands connect upward and downward.",
+            "Landmarks support player orientation."
+          ],
+          "artifactPaths": [
+            "Assets/Scripts/CityGen/Agents/CirculationAgent.cs",
+            "Assets/Scripts/CityGen/Data/RouteEdge.cs",
+            "Assets/CityGen/Exports/"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Implement local layout and room synthesis",
+      "kind": "unity.citygen.contract",
+      "roleHint": "layout agent",
+      "priority": "medium",
+      "summary": "Build walkable local spaces, anchor points, and room clusters from district identities.",
+      "goal": "Turn district-level graph outputs into local loops, room clusters, and placement anchors.",
+      "inputs": [
+        "District nodes",
+        "Route graph",
+        "Docs/Prompts/Agents/09-local-street-interior-agent.md",
+        "Docs/Prompts/Agents/10-building-room-agent.md"
+      ],
+      "outputs": [
+        "LocalLayoutAgent v1",
+        "RoomAgent v1",
+        "Anchor point schema"
+      ],
+      "nonGoals": [
+        "Final prop dressing",
+        "Internet-sourced asset import"
+      ],
+      "doneCondition": [
+        "Districts expose main paths, side loops, and service nodes.",
+        "Room clusters can be generated from district tags.",
+        "Placement anchors exist for later blockout and prefab placement."
+      ],
+      "artifactPaths": [
+        "Assets/Scripts/CityGen/Agents/",
+        "Assets/Scripts/CityGen/Data/"
+      ]
+    },
+    {
+      "title": "Expand blockout geometry pass",
+      "kind": "unity.citygen.contract",
+      "roleHint": "geometry agent",
+      "priority": "high",
+      "summary": "Use the richer graph to generate district volumes, bridges, shafts, and local blockout spaces.",
+      "goal": "Move beyond band shells into a readable city blockout that tracks the semantic graph.",
+      "inputs": [
+        "Current blockout generator",
+        "District graph outputs",
+        "Circulation graph outputs",
+        "Docs/Prompts/Agents/14-unity-geometry-agent.md"
+      ],
+      "outputs": [
+        "GeometryAgent v1",
+        "District blockout volumes",
+        "Route bridges, shafts, stairs, and room markers"
+      ],
+      "nonGoals": [
+        "Final art assets",
+        "Polished lighting"
+      ],
+      "doneCondition": [
+        "Generated geometry corresponds to district and route data.",
+        "The city is legible from a distance and navigable at the local level.",
+        "Debug volumes and labels remain available for inspection."
+      ],
+      "artifactPaths": [
+        "Assets/Scripts/CityGen/Core/CityGenerator.Blockout.cs",
+        "Assets/Scripts/CityGen/Agents/GeometryAgent.cs",
+        "Assets/Scenes/"
+      ]
+    },
+    {
+      "title": "Add asset placement contract and validator",
+      "kind": "unity.citygen.contract",
+      "roleHint": "asset-integration agent",
+      "priority": "medium",
+      "summary": "Prepare the system for controlled prefab and asset placement without turning Intentspace into a mesh store.",
+      "goal": "Define the schema and validation rules for placing real assets into generated spaces.",
+      "inputs": [
+        "Local layout outputs",
+        "Room outputs",
+        "Current blockout geometry pass"
+      ],
+      "outputs": [
+        "AssetSpec schema",
+        "AnchorPoint schema",
+        "Placement validator",
+        "Prefab registry contract"
+      ],
+      "nonGoals": [
+        "Full internet crawling",
+        "Automated marketplace purchasing"
+      ],
+      "doneCondition": [
+        "The system can describe what asset category is needed and where.",
+        "Placed assets can be checked for size, orientation, and clearance.",
+        "The Unity scene can accept curated prefabs against anchor points."
+      ],
+      "artifactPaths": [
+        "Assets/Scripts/CityGen/Data/",
+        "Assets/Scripts/CityGen/Validation/",
+        "Docs/Contracts/"
+      ]
+    },
+    {
+      "title": "Operationalize Intentspace workflow in Unity",
+      "kind": "unity.citygen.contract",
+      "roleHint": "tools agent",
+      "priority": "high",
+      "summary": "Make the live Intentspace bridge usable as a daily coordination loop from inside the Editor.",
+      "goal": "Turn imported work items into an actionable backlog and keep artifact exchange practical.",
+      "inputs": [
+        "Current import/export scripts",
+        "Current Inbox window",
+        "Assets/CityGen/Backlog/citygen-intentspace-backlog.json"
+      ],
+      "outputs": [
+        "Backlog publisher script",
+        "Inbox workflow notes",
+        "Adoptable work items with artifact traceability"
+      ],
+      "nonGoals": [
+        "Full runtime sync",
+        "Treating Unity as a network client at play time"
+      ],
+      "doneCondition": [
+        "The project backlog can be posted into Intentspace from a structured source.",
+        "Unity can import visible work items and bind them to local work.",
+        "Artifact paths and work-intent ids remain traceable."
+      ],
+      "artifactPaths": [
+        "Tools/",
+        "Assets/Scripts/CityGen/Editor/",
+        "Assets/Scripts/CityGen/Core/CityGenerator.IntentSpace.cs"
+      ]
+    },
+    {
+      "title": "Playtest and validate navigation coherence",
+      "kind": "unity.citygen.contract",
+      "roleHint": "validation agent",
+      "priority": "medium",
+      "summary": "Stress the generator against navigation, infrastructure, and historical-layer checks.",
+      "goal": "Make sure the generator produces cities that are coherent, traversable, and visibly layered.",
+      "inputs": [
+        "ValidationAgent v1",
+        "Generated city exports",
+        "Scene screenshots and walkthroughs"
+      ],
+      "outputs": [
+        "Expanded validation rules",
+        "Repair suggestions",
+        "Playtest notes"
+      ],
+      "nonGoals": [
+        "Art polish",
+        "Quest content"
+      ],
+      "doneCondition": [
+        "Major districts are reachable.",
+        "Support services exist for residential and hospital spaces.",
+        "At least three historical layers are visible in the blockout or labels."
+      ],
+      "artifactPaths": [
+        "Assets/Scripts/CityGen/Validation/",
+        "Assets/CityGen/Exports/",
+        "Docs/"
+      ]
+    }
+  ]
+}

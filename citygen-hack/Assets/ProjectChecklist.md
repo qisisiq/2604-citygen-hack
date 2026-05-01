@@ -21,9 +21,9 @@ Here’s the same plan as a checklist, with the Unity `.gitignore` work folded i
   - `Implement validation and debug visualization v1`
   - `Implement primitive geometry blockout v1`
   - `Playtest seed and iterate on city logic`
-- [ ] Decompose further only by generator module, not by district yet.
+- [x] Decompose further only by generator module, not by district yet.
 
-- [ ] Define a standard intent template for implementation work:
+- [x] Define a standard intent template for implementation work:
   - `Goal`
   - `Inputs`
   - `Outputs`

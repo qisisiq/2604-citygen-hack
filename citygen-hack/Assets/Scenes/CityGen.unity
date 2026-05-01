@@ -32209,6 +32209,7 @@ GameObject:
   - component: {fileID: 961739752}
   - component: {fileID: 961739751}
   - component: {fileID: 961739750}
+  - component: {fileID: 961739754}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -32334,6 +32335,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &961739754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 961739749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e926b0e29f554500bd48634cd85c6c91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 80
+  sprintMultiplier: 2.5
+  lookSensitivity: 2
+  minPitch: -89
+  maxPitch: 89
+  requireRightMouseButtonToLook: 0
+  lockCursorWhileLooking: 1
 --- !u!1 &988704899
 GameObject:
   m_ObjectHideFlags: 0
@@ -42904,7 +42924,7 @@ MonoBehaviour:
   intentSpaceImportScriptProjectRelativePath: Tools/citygen_import_from_intentspace.py
   lastImportedIntentSpaceData:
     ImportVersion: 0.1.0
-    ImportedAtUtc: 2026-04-30T23:31:53.967176+00:00
+    ImportedAtUtc: 2026-05-01T00:10:40.762598+00:00
     SpaceId: space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d
     ObservatoryUrl: https://spacebase1.differ.ac/observatory#origin=https%3A%2F%2Fspacebase1.differ.ac&space=space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d&token=JbQr-rn0uOkmxGX57OX5XrRs8IQJ1Kg5EdlRKAJGTdg
     ParentFilter: space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d
@@ -42917,6 +42937,13 @@ MonoBehaviour:
       Kind: 
       LatestState: INTENT
       Summary: 
+      Goal: 
+      RoleHint: 
+      Priority: 
+      Inputs: []
+      Outputs: []
+      NonGoals: []
+      DoneCondition: []
       ArtifactPaths: []
       Tags: []
     - IntentId: intent-f6e93b1f-c95a-4783-8c61-36ea6f093ad6
@@ -42926,11 +42953,56 @@ MonoBehaviour:
       Kind: unity.citygen.export
       LatestState: INTENT
       Summary: 
+      Goal: 
+      RoleHint: 
+      Priority: 
+      Inputs: []
+      Outputs: []
+      NonGoals: []
+      DoneCondition: []
       ArtifactPaths:
       - citygen-hack/Assets/CityGen/Exports/bridge-smoke-test.json
       - citygen-hack/Assets/CityGen/Exports/bridge-smoke-test.json
       Tags: []
-  lastImportedIntentSpaceSummary: 'Imported 2 Intentspace work item(s)
+    - IntentId: intent-b8def2d6-e500-4acd-a528-767e5520a004
+      ParentId: space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d
+      SenderId: prn_spacebase1_space_9f617722_9f76_4d56_8c89_c25ab1ab0b5d
+      Content: Build procedural vertical city generator in Unity
+      Kind: unity.citygen.project
+      LatestState: INTENT
+      Summary: 
+      Goal: Coordinate the remaining work needed to turn the current prototype into
+        a coherent multi-agent procedural city generator in Unity.
+      RoleHint: 
+      Priority: 
+      Inputs:
+      - Docs/Canon/ascending-ward.md
+      - Docs/Contracts/generator-architecture.md
+      - Docs/Contracts/city-context-schema.md
+      - Docs/Contracts/agent-pipeline.md
+      - Assets/Scripts/CityGen/
+      Outputs:
+      - A deterministic semantic graph pipeline
+      - A navigable blockout geometry pass
+      - A validation pass with concrete repair outputs
+      - A working Intentspace coordination loop for the Unity project
+      NonGoals:
+      - Final art production
+      - One-click finished city generation
+      - District-specific handcrafted polish
+      - Open-ended internet asset crawling
+      DoneCondition:
+      - The generator produces a coherent vertical city graph from a seed.
+      - The blockout is navigable and legible in Scene view.
+      - Major systems can be coordinated through Intentspace contracts and artifact
+        references.
+      ArtifactPaths:
+      - Assets/Scripts/CityGen/
+      - Assets/CityGen/Exports/
+      - Assets/CityGen/Imports/
+      - Docs/
+      Tags: []
+  lastImportedIntentSpaceSummary: 'Imported 3 Intentspace work item(s)
 
     Space:
     space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d
@@ -42940,7 +43012,10 @@ MonoBehaviour:
     further spaces. (spacebase1:service:space-9f617722-9f76-4d56-8c89-c25ab1ab0b5d)
 
     -
-    [INTENT] Unity export: bridge smoke test (intent-f6e93b1f-c95a-4783-8c61-36ea6f093ad6)'
+    [INTENT] Unity export: bridge smoke test (intent-f6e93b1f-c95a-4783-8c61-36ea6f093ad6)
+
+    -
+    [INTENT] Build procedural vertical city generator in Unity (intent-b8def2d6-e500-4acd-a528-767e5520a004)'
 --- !u!1 &1210146750
 GameObject:
   m_ObjectHideFlags: 0
